@@ -58,6 +58,7 @@ void set_freq(int hz) {
   digitalWrite(D3_PIN, (led_i > 2 && led_i < 5) ? HIGH : LOW);
 }
 
+uint16_t hz = 0;
 void setup() {
   Serial.begin(115200);
 
@@ -71,16 +72,18 @@ void setup() {
   pinMode(D3_PIN, OUTPUT);
   safe();
 
+  hz = 0;
+
   timer1_isr_init();
   timer1_attachInterrupt(tone_tick);
   set_freq(0);
 }
 
 uint8_t ser_i;
-uint16_t hz = 0;
 void loop() {
   while (Serial.available()) {
-    hz |= ((uint8_t)Serial.read()) << ser_i;
+    uint8_t c = Serial.read();
+    hz |= (c << (8*ser_i));
     ser_i++;
     if (ser_i > 1) {  
       ser_i = 0;
