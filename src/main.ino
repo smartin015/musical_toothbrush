@@ -38,11 +38,14 @@ void safe() {
   digitalWrite(Q2_PIN, LOW);
   digitalWrite(Q3_PIN, LOW);
   digitalWrite(Q4_PIN, LOW);
-  //digitalWrite(D1_PIN, LOW);
-  //digitalWrite(D2_PIN, LOW);
-  //digitalWrite(D3_PIN, LOW);
+  digitalWrite(D1_PIN, LOW);
+  digitalWrite(D2_PIN, LOW);
+  digitalWrite(D3_PIN, LOW);
 }
 
+
+uint16_t last_nonzero_hz = 0;
+uint8_t led_i = 0;
 void set_freq(int hz) {
   if (hz == 0) {
     timer1_disable();
@@ -52,7 +55,10 @@ void set_freq(int hz) {
   timer1_enable(TIM_DIV16, TIM_EDGE, TIM_LOOP); // 5MHz - 5 ticks/us
   timer1_write(5*1000000/(hz*4));
 
-  int led_i = hz % 6;
+  if (hz != last_nonzero_hz) {
+    led_i = ((led_i + 5) + ((hz > last_nonzero_hz) ? 1 : -1)) % 5;
+    last_nonzero_hz = hz;
+  }
   digitalWrite(D1_PIN, (led_i < 3) ? HIGH : LOW);
   digitalWrite(D2_PIN, (led_i > 1 && led_i < 4) ? HIGH : LOW);
   digitalWrite(D3_PIN, (led_i > 2 && led_i < 5) ? HIGH : LOW);
