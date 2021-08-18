@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name WR_CONN)(type Eagle)(uri "/home/semartin/Documents/custom_toothbrush_board/custom_toothbrush_board/Eagle_WR-BHD (rev21a).lbr")(options "")(descr ""))
+)
